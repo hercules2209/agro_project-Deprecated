@@ -7,6 +7,7 @@ from PIL import Image
 import tensorflow as tf
 app = FastAPI()
 ##change path to where you stored model
+## the path should be "C:\\Users\\{Username}\\Documents\\GitHub\\agro_project\\models\\strawberry\\1"
 MODEL = tf.keras.models.load_model("D:\\agro project\\Image Data base\\Image Data base\\models\\strawberry\\1")
 CLASS_NAMES = ["Strawberry leaf scorch","Strawberry healthy"]
 @app.get("/home")
