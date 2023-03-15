@@ -5,13 +5,7 @@ import numpy as np
 from io import BytesIO
 from PIL import Image
 import tensorflow as tf
-
-IMAGE_SIZE = 256
-input_shape = (IMAGE_SIZE, IMAGE_SIZE, 3)
-
-resize_and_rescale = tf.keras.Sequential([
-    layers.experimental.preprocessing.Resizing(IMAGE_SIZE, IMAGE_SIZE),
-    layers.experimental.preprocessing.Rescaling(1./255,input_shape),])
+from tensorflow.keras import layers
 app = FastAPI()
 ##change path to where you stored model
 ## the path should be "C:\\Users\\{Username}\\Documents\\GitHub\\agro_project\\models\\strawberry\\1"
@@ -21,6 +15,12 @@ CLASS_NAMES = ["Strawberry leaf scorch","Strawberry healthy"]
 async def root():
     return {"message": "Hello World"}
 
+IMAGE_SIZE = 256
+input_shape = (IMAGE_SIZE, IMAGE_SIZE, 3)
+
+resize_and_rescale = tf.keras.Sequential([
+  layers.experimental.preprocessing.Resizing(IMAGE_SIZE, IMAGE_SIZE),
+  layers.experimental.preprocessing.Rescaling(1./255,input_shape),])
 
 def read_file_as_image(data) -> np.ndarray:
     image = np.array(Image.open(BytesIO(data)))
