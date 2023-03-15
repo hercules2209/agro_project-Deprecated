@@ -10,6 +10,13 @@ app = FastAPI()
 async def root():
     return {"message": "Hello World"}
 
+IMAGE_SIZE = 256
+input_shape = (IMAGE_SIZE, IMAGE_SIZE, 3)
+
+resize_and_rescale = tf.keras.Sequential([
+    layers.experimental.preprocessing.Resizing(IMAGE_SIZE, IMAGE_SIZE),
+    layers.experimental.preprocessing.Rescaling(1./255,input_shape),])
+
 #change path to where you have saved your model
 def read_file_as_image(data) -> np.ndarray:
     image = np.array(Image.open(BytesIO(data)))
@@ -29,6 +36,7 @@ async def predict(
         }
     image = read_file_as_image(await file.read())
     img_batch=np.expand_dims(image, 0)
+    img_batch=resize_and_rescale(img_batch)
     predictions=MODEL.predict(img_batch)
     predicted_class = CLASS_NAMES[np.argmax(predictions[0])]
     confidence = np.max(predictions[0])
