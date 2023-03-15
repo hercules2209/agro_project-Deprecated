@@ -5,6 +5,13 @@ import numpy as np
 from io import BytesIO
 from PIL import Image
 import tensorflow as tf
+
+IMAGE_SIZE = 256
+input_shape = (IMAGE_SIZE, IMAGE_SIZE, 3)
+
+resize_and_rescale = tf.keras.Sequential([
+    layers.experimental.preprocessing.Resizing(IMAGE_SIZE, IMAGE_SIZE),
+    layers.experimental.preprocessing.Rescaling(1./255,input_shape),])
 app = FastAPI()
 ##change path to where you stored model
 ## the path should be "C:\\Users\\{Username}\\Documents\\GitHub\\agro_project\\models\\strawberry\\1"
@@ -25,6 +32,7 @@ async def predict(
 ):
     image = read_file_as_image(await file.read())
     img_batch=np.expand_dims(image, 0)
+    img_batch=resize_and_rescale(img_batch)
     predictions=MODEL.predict(img_batch)
     predicted_class = CLASS_NAMES[np.argmax(predictions[0])]
     confidence = np.max(predictions[0])
