@@ -5,6 +5,7 @@ import numpy as np
 from io import BytesIO
 from PIL import Image
 import tensorflow as tf
+from tensorflow.keras import layers
 app = FastAPI()
 @app.get("/home")
 async def root():
@@ -44,7 +45,6 @@ async def predict(
         'class': predicted_class,
         'confidence': float(confidence)
     }
-
 
 if __name__=="__main__":
     uvicorn.run(app,host='localhost',port=8000)
